@@ -1,0 +1,73 @@
+L3: The pseudofacebook data
+===========================
+
+```{r}
+pf <- read.csv('pseudo_facebook.tsv', sep="\t")
+names(pf)
+
+library(ggplot2)
+
+qplot(data=pf, x=dob_day) +
+  scale_x_discrete(breaks=1:31)
+
+qplot(data=pf, x=dob_day) +
+  scale_x_discrete(breaks=1:31) +
+  facet_wrap(~dob_month, ncol=3)
+```
+
+facet_wrap
+----------
+`facet_wrap` takes a formula `facet_wrap(formula)`. The formula is just a ~ followed by the (categorical) value you want to facet over. Above, it's months.
+
+Similar: `facet_grid(formula)`: the formula is `(vertical~horizontal)`. Use this one for two or more variable situations.
+
+##Friend count
+```{r}
+qplot(data = pf, x = friend_count)
+```
+Need to cut out long tail of data -- so use `xlim`:
+```{r}
+qplot(data = pf, x = friend_count, xlim = c(0,1000))
+```
+-or-
+```{r}
+qplot(data = pf, x = friend_count) +
+  scale_x_continuous(limits = c(0,1000))
+```
+
+###Better labels and binning
+
+```{r}
+qplot(data = pf, x = friend_count, binwidth = 25) +
+  scale_x_continuous(limits = c(0,1000), breaks = seq(0, 1000, 50))
+```
+
+###Histogram by gender
+```{r}
+qplot(data = subset(pf, !is.na(gender)), x = friend_count, binwidth = 25) +
+  scale_x_continuous(limits = c(0,1000), breaks = seq(0, 1000, 50)) +
+  facet_wrap(~gender)
+```
+
+##Statistics by gender
+```{r}
+table(pf$gender)
+
+by(pf$friend_count, pf$gender, summary)
+```
+`by()` args: variable, categorical variable for faceting, function
+
+##Tenure
+```{r}
+qplot(x = tenure, data = pf, binwidth = 30,
+      color = I('black'), fill = I('#099DD9'))
+```
+
+###Tenure in years
+
+```{r}
+qplot(x = tenure/365, data = pf, binwidth = .25,
+      color = I('black'), fill = I('#099DD9')) +
+  scale_x_continuous(limits=c(0,7), breaks=seq(0,7,1))
+```
+

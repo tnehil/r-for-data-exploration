@@ -71,3 +71,68 @@ qplot(x = tenure/365, data = pf, binwidth = .25,
   scale_x_continuous(limits=c(0,7), breaks=seq(0,7,1))
 ```
 
+##Labeling plots
+```{r}
+qplot(x = tenure/365, data = pf, binwidth = .25,
+      xlab = "Years using FB",
+      ylab = "Number of users",
+      color = I('black'), fill = I('#099DD9')) +
+  scale_x_continuous(limits=c(0,7), breaks=seq(0,7,1))
+```
+
+##User ages
+```{r}
+qplot(x = age, data = pf, binwidth = 1,
+      xlab = "Age",
+      ylab = "Number of users",
+      color = I('#999999'), fill = I('#562267')) +
+  scale_x_continuous(lim=c(0,113), breaks=seq(0,113,5))
+
+qplot(x = age, data = pf, binwidth = 1,
+      xlab = "Age",
+      ylab = "Number of users",
+      color = I('#999999'), fill = I('#562267')) +
+  scale_x_discrete(breaks=seq(0,113,5))
+
+```
+
+##Transforming data
+```{r}
+qplot(x = friend_count, data = pf)
+
+summary(pf$friend_count)
+
+summary(log10(pf$friend_count + 1))
+
+summary(sqrt(pf$friend_count))
+
+install.packages("gridExtra")
+library(gridExtra)
+
+p1 = qplot(x = friend_count, data = pf)
+p2 = qplot(x = (friend_count+1), data = pf) + scale_x_log10()
+p3 = qplot(x = friend_count, data = pf) + scale_x_sqrt()
+
+grid.arrange(p1,p2,p3, ncol=1)
+```
+
+##Frequency polygons
+```{r}
+qplot(x = friend_count, y = ..count../sum(..count..), 
+      data = subset(pf, !is.na(gender)), binwidth=10, geom = 'freqpoly',
+      color = gender) + 
+  scale_x_continuous(lim = c(0,1000), breaks = seq(0,1000,50)) 
+```
+
+##Likes by gender
+```{r}
+summary(pf$likes)
+
+qplot(x = www_likes, y = ..count../sum(..count..),
+      data = subset(pf, !is.na(gender)), binwidth = 5, geom = 'freqpoly',
+      color = gender) +
+  scale_x_continuous(lim = c(0,100), breaks = seq(0,100,50))
+
+
+```
+

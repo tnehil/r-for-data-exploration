@@ -1,0 +1,51 @@
+#Problem set 3
+
+##P1, P2, P3, P4 Diamonds
+```{r}
+library(ggplot2)
+data(diamonds)
+#P1
+names(diamonds)
+dim(diamonds)
+str(diamonds)
+levels(diamonds$color)
+?diamonds
+
+#P2
+qplot(data = diamonds, x = price)
+
+#P3
+summary(diamonds$price)
+
+#P4
+dim(subset(diamonds, price <500))
+dim(subset(diamonds, price <250))
+dim(subset(diamonds, price >=15000))
+
+#P5
+
+qplot(data = diamonds, x = price) +
+  scale_x_continuous(limits = c(0,2500))
+
+qplot(data = diamonds, x = price) +
+  scale_x_continuous(limits = c(500,1000))
+
+qplot(data = diamonds, x = price) +
+  scale_x_continuous(limits = c(700,900))
+
+qplot(data = diamonds, x = price, binwidth=1) +
+  scale_x_continuous(limits = c(250,2500), breaks=seq(250,2500,250))
+ggsave("diamonddetail.png")
+
+#P6
+qplot(data = diamonds, x = price) +
+  facet_wrap(~cut)
+
+#p7
+by(diamonds$price, diamonds$cut, max)
+by(diamonds$price, diamonds$cut, min)
+by(diamonds$price, diamonds$cut, median)
+
+#p8-resume here!
+```
+

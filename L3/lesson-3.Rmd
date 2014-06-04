@@ -2,6 +2,7 @@ L3: The pseudofacebook data
 ===========================
 
 ```{r}
+setwd("~/Documents/School/Udacity/r-for-data-exploration/L3")
 pf <- read.csv('pseudo_facebook.tsv', sep="\t")
 names(pf)
 
@@ -133,6 +134,54 @@ qplot(x = www_likes, y = ..count../sum(..count..),
       color = gender) +
   scale_x_continuous(lim = c(0,100), breaks = seq(0,100,50))
 
+#Total likes by gender
+by(pf$www_likes, pf$gender, sum)
+```
+
+##Box plots
+Note- x is always categorical, y is always continuous
+```{r}
+
+qplot(x = gender, y = friend_count, data = subset(pf, !is.na(gender)), 
+      geom = "boxplot")
+
+#Eliminate outliers
+qplot(x = gender, y = friend_count, data = subset(pf, !is.na(gender)), 
+      geom = "boxplot", ylim = c(0,1000))
+
+#Scale y continuous layer
+qplot(x = gender, y = friend_count, data = subset(pf, !is.na(gender)), 
+      geom = "boxplot") +
+  scale_y_continuous(limits = c(0,1000))
+
+#Coord cartesian layer -- doesn't remove data points
+qplot(x = gender, y = friend_count, data = subset(pf, !is.na(gender)), 
+      geom = "boxplot") +
+  coord_cartesian(ylim = c(0,1000))
+```
+##Who initiated more friendships?
+```{r}
+qplot(x = gender, y = friendships_initiated, data = subset(pf, !is.na(gender)), 
+      geom = "boxplot") +
+  coord_cartesian(ylim = c(0,150))
+
+by(pf$friendships_initiated, pf$gender, summary)
 
 ```
+
+##Getting logical
+Using ifelse to create new variables
+```{r}
+summary(pf$mobile_likes)
+#vs
+summary(pf$mobile_likes > 0)
+
+pf$mobile_check_in <- NA
+pf$mobile_check_in <- ifelse(pf$mobile_likes > 0, 1, 0)
+pf$mobile_check_in <- factor(pf$mobile_check_in)
+summary(pf$mobile_check_in)
+
+length(pf$mobile_check_in[pf$mobile_check_in == 1])/length(pf$mobile_check_in)
+```
+`length()` gives number of observations in a vector
 

@@ -1,4 +1,8 @@
 #Problem set 3
+```{r}
+setwd("~/Documents/School/Udacity/r-for-data-exploration/L3")
+```
+
 
 ##P1, P2, P3, P4 Diamonds
 ```{r}
@@ -140,8 +144,56 @@ qplot(x = carat, data = diamonds, binwidth = 0.1, geom = "freqpoly") +
 qplot(x = carat, data = diamonds, binwidth = 0.01, geom = "freqpoly") +
   scale_x_continuous(limits = c(0,2), breaks = seq(0,2,.1))
 ```
-##Gapminder data
+##Gapminder data - p14
+
+###Food consumption
+First load and explore the data
 ```{r}
-#p14 - resume here
+library(xlsx)
+
+food <- read.xlsx("food_consumption.xlsx", 1)
+
+str(food)
+```
+How many calories did people on average consume in 1961?
+```{r}
+library(ggplot2)
+
+qplot(x = X1961, data = food, binwidth = 50)
 ```
 
+How many calories did people on average consume in 2007?
+```{r}
+qplot(x = X2007, data = food, binwidth = 50)
+```
+
+Do people consume more calories on average in 2007 than in 1961?
+```{r}
+library(gridExtra)
+
+p1 = qplot(x = X1961, data = food, binwidth=50, color = I('#36A174'), fill = I('#1D8C47')) +
+           ylab("Number of countries") + xlab("Avg. kcal consumed") + labs(title = "1961") +
+  scale_x_continuous(limits = c(1400,4000), breaks = seq(1400,4000,250)) +
+  theme(panel.background = element_rect(fill='white', color='gray'))
+
+p2 = qplot(x = X2007, data = food, binwidth=50, color = I('#36A174'), fill = I('#1D8C47')) +
+           ylab("Number of countries") + xlab("Avg. kcal consumed") + labs(title = "2007") +
+  scale_x_continuous(limits = c(1400,4000), breaks = seq(1400,4000,250)) +
+  theme(panel.background = element_rect(fill='white', color='gray'))
+
+p <- arrangeGrob(p1,p2)
+grid.arrange(p)
+
+ggsave("avg-kcal-consumption-1961-and-2007.png",p)
+```
+
+
+
+###Broadband
+```{r}
+library(xlsx)
+
+bb <- read.xlsx("broadband-per-100.xlsx", 1)
+
+str(bb)
+```

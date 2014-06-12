@@ -197,3 +197,32 @@ bb <- read.xlsx("broadband-per-100.xlsx", 1)
 
 str(bb)
 ```
+
+##P15
+
+# How many people share your birthday? Do you know them?
+# (Reserve time with them or save money to buy them a gift!)
+
+# Which month contains the most number of birthdays?
+
+# How many birthdays are in each month?
+
+# Which day of the year has the most number of birthdays?
+
+# Do you have at least 365 friends that have birthdays on everyday
+# of the year?
+
+```{r}
+
+library(lubridate)
+library(ggplot2)
+bday <- read.csv("birthdaysExample.csv")
+bbday <- as.Date(bday$dates, format = "%m/%d/%y")
+
+summary(bbday)
+
+qplot(x = bbday, binwidth=1)
+
+
+```
+

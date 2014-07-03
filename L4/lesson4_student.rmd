@@ -95,7 +95,9 @@ It's rare for users over age 50 to have 0 friends, more common for young users, 
 Notes:
 
 ```{r Alpha and Jitter}
-
+ggplot(aes(x = age, y = friendships_initiated), data = pf) + 
+  geom_jitter(alpha = 1/20) +
+  xlim(13,90)
 ```
 
 ***
@@ -109,12 +111,50 @@ Notes:
 Notes:
 
 ```{r Conditional Means}
+library(dplyr)
+
+#common functions with dplyr, which splits up a data frame and applies functions
+# filter()
+# group_by()
+# mutate()
+# arrange()
+
+age_groups <- group_by(pf, age)
+
+pf.fc_by_age <- summarise(age_groups,
+                          friend_count_mean = mean(friend_count),
+                          friend_count_median = median(friend_count),
+                          n = n()) 
+
+pf.fc_by_age <- arrange(pf.fc_by_age, age)
+
+head(pf.fc_by_age)
+
+#Since this is confusing, here's another way to do it
+
+pf.fc_by_age <- pf %.%
+  group_by(age) %.%
+  summarise(friend_count_mean = mean(friend_count),
+            friend_count_median = median(friend_count),
+            n = n()) %.%
+  arrange(age)
+
+head(pf.fc_by_age)
 
 ```
 
 Create your plot!
 
 ```{r Conditional Means Plot}
+
+# Plot mean friend count vs. age using a line graph.
+# Be sure you use the correct variable names
+# and the correct data frame. You should be working
+# with the new data frame created from the dplyr
+# functions. The data frame is called 'pf.fc_by_age'.
+
+ggplot(aes(x = age, y = friend_count_mean), data = pf.fc_by_age) +
+  geom_line()
 
 ```
 
